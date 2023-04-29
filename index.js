@@ -5,7 +5,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 app.get("/", (req, res) => {
-    res.status(200).send("My test express app on aws lambda");
+    res.status(200).send("My test express app on aws lambda. Lets see if it works");
 })
 
 app.listen(3000, () => {
