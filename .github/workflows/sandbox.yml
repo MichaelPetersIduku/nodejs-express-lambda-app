@@ -1,0 +1,62 @@
+name: Deploy Development Lambda
+
+on:
+  pull_request:
+    branches: [dev, master, staging]
+
+jobs:
+  deploy_lambda:
+    if: github.head_ref != 'staging' && github.head_ref != 'dev'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "^10"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_DEFAULT_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_DEFAULT_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: npm install
+        env:
+          CI: true
+        run: |
+          npm ci --only=prod
+
+      - name: Boto3 install
+        run: |
+          pip3 install boto3
+
+      - name: Verify run id
+        run: echo Run Id $GITHUB_RUN_ID
+
+      - name: Get branch name (pull request)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr / - | tr . -)" >> $GITHUB_ENV
+        
+      - name: aws-ssm-to-env
+        uses: bomb-on/aws-ssm-to-env@master
+        with:
+          ssm_parameter_list: |
+            FinPayWallet_EXECUTION_ROLE
+
+      - name: Create Function
+        run: |
+          echo $BRANCH_NAME
+          zip -r deploy.zip ./*
+          aws lambda create-function --function-name Staging-Ethereum-API-$BRANCH_NAME --runtime nodejs12.x --role "$(printenv AWS_SSM_FINPAYWALLET_EXECUTION_ROLE)" --handler index.handler --zip-file fileb://deploy.zip | true
+
+      - name: deploy
+        run: |
+          echo $BRANCH_NAME
+          zip -r deploy.zip ./*
+          aws lambda update-function-code --function-name=Staging-Ethereum-API-$BRANCH_NAME --zip-file=fileb://deploy.zip
+
+      - name: Update Function Config
+        run: |
+          python3 ./.github/scripts/python_scripts/update_lambda.py $BRANCH_NAME
