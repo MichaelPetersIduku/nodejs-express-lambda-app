@@ -11,12 +11,12 @@ if len(sys.argv) < 2:
 branch_name = sys.argv[1]
 
 
-lambda_found = fetch_lambda(f"Staging-Ethereum-API-{branch_name}")
+lambda_found = fetch_lambda(f"Staging-ExpressLambda-API-{branch_name}")
 if not lambda_found:
     sys.exit("Lambda does not exist")
 else:
     function_arn = lambda_found["FunctionArn"]
-    parameterName = f"EthereumAPIAppsync_{branch_name}_LAMBDA_ARN"
+    parameterName = f"ExpressLambdaAPIAppsync_{branch_name}_LAMBDA_ARN"
     try:
         response = create_parameter(
             name=parameterName,

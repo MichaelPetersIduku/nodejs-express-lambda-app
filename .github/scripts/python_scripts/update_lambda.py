@@ -17,13 +17,13 @@ aws_layers = []
 lambda_layers = []
 
 if branch_name == "master":
-    lambda_name = "Ethereum-API"
+    lambda_name = "ExpressLambda-API"
 elif branch_name == "staging":
-    lambda_name = "Staging-Ethereum-API"
+    lambda_name = "Staging-ExpressLambda-API"
 elif branch_name == "dev":
-    lambda_name = "Staging-Ethereum-API-dev"
+    lambda_name = "Staging-ExpressLambda-API-dev"
 else:
-    lambda_name = f"Staging-Ethereum-API-{branch_name}"
+    lambda_name = f"Staging-ExpressLambda-API-{branch_name}"
 
 
 try:
