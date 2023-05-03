@@ -9,13 +9,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 console.log("MONGODB_URL", process.env.MONGODB_URL);
-mongoose.connect(process.env.MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  // useCreateIndex: true,
-  // useFindAndModify: false,
-  // autoIndex: true,
-});
+mongoose.connect(process.env.MONGODB_URL).then(() => console.log("Connected!"));
+// , {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// useCreateIndex: true,
+// useFindAndModify: false,
+// autoIndex: true,
+// });
 
 connection.on("error", (error) => {
   console.log(`MongoDB database connection error: ${error}`);
