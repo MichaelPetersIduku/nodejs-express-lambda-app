@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
 app.get("/info", (req, res) => {
   res.status(200).json({
     info: "You want an info, this is it",
+    isDBConnnected: connection.readyState
   });
 });
 
