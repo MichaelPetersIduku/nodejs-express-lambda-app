@@ -11,12 +11,7 @@
   "author": "Michael Iduku",
   "license": "ISC",
   "dependencies": {
-    "aws-serverless-express": "^3.4.0",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.18.2"
-  },
-  "devDependencies": {
-    "serverless": "^3.30.1"
+    "express": "^4.18.2",
+    "serverless-http": "^3.2.0"
   }
 }
