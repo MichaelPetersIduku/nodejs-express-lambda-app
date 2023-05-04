@@ -18,7 +18,7 @@ if len(sys.argv) < 2:
     sys.exit("Please specify a branch name")
 branch_name = sys.argv[1]
 
-lambda_name = f"Staging-Ethereum-API-{branch_name}"
+lambda_name = f"Staging-ExpressLambda-API-{branch_name}"
 
 lambda_respone = fetch_lambda(lambda_name)
 
@@ -42,7 +42,7 @@ except Exception as error:
 
 try:
     response = ssm.delete_parameter(
-        Name=f"EthereumAPIAppsync_{branch_name}_LAMBDA_ARN"
+        Name=f"ExpressLambdaAPIAppsync_{branch_name}_LAMBDA_ARN"
     )
     print(f"ARN Parameter entry for lambda deleted: {response}")
 except Exception as error:
@@ -51,7 +51,7 @@ except Exception as error:
 
 try:
     response = ssm.delete_parameter(
-        Name=f"EthereumAPI_{branch_name}_APPSYNC_CONFIG"
+        Name=f"ExpressLambdaAPI_{branch_name}_APPSYNC_CONFIG"
     )
     print(f"APPSYNC Parameter entry for lambda deleted: {response}")
 except Exception as error:

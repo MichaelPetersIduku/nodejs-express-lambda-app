@@ -49,13 +49,13 @@ jobs:
         run: |
           echo $BRANCH_NAME
           zip -r deploy.zip ./*
-          aws lambda create-function --function-name Staging-Ethereum-API-$BRANCH_NAME --runtime nodejs12.x --role "$(printenv AWS_SSM_FINPAYWALLET_EXECUTION_ROLE)" --handler index.handler --zip-file fileb://deploy.zip | true
+          aws lambda create-function --function-name Staging-ExpressLambda-API-$BRANCH_NAME --runtime nodejs12.x --role "$(printenv AWS_SSM_FINPAYWALLET_EXECUTION_ROLE)" --handler index.handler --zip-file fileb://deploy.zip | true
 
       - name: deploy
         run: |
           echo $BRANCH_NAME
           zip -r deploy.zip ./*
-          aws lambda update-function-code --function-name=Staging-Ethereum-API-$BRANCH_NAME --zip-file=fileb://deploy.zip
+          aws lambda update-function-code --function-name=Staging-ExpressLambda-API-$BRANCH_NAME --zip-file=fileb://deploy.zip
 
       - name: Update Function Config
         run: |
