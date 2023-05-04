@@ -11,6 +11,7 @@
   "author": "Michael Iduku",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^7.1.0",
     "serverless-http": "^3.2.0"

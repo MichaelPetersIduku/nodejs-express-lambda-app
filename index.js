@@ -1,15 +1,25 @@
+require("dotenv").config();
 const express = require("express");
 const serverless = require("serverless-http");
 const mongoose = require("mongoose");
-
 const { connection } = mongoose;
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(async function(req, res, next) {
+  await mongoose.connect(process.env.MONGODB_URL);
+  res.on("finish", async function () {
+    if (connection.readyState === 1) {
+      await connection.close();
+    }
+  });
+
+  next();
+})
+
 console.log("MONGODB_URL", process.env.MONGODB_URL);
-mongoose.connect(process.env.MONGODB_URL).then(() => console.log("Connected!"));
 // , {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
