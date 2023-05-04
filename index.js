@@ -2,14 +2,17 @@ require("dotenv").config();
 const express = require("express");
 const serverless = require("serverless-http");
 const mongoose = require("mongoose");
-const { connection } = mongoose;
+const { connection, Schema, model } = mongoose;
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use(async function(req, res, next) {
-  await mongoose.connect(process.env.MONGODB_URL);
+  await mongoose.connect(process.env.MONGODB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   res.on("finish", async function () {
     if (connection.readyState === 1) {
       await connection.close();
@@ -17,16 +20,7 @@ app.use(async function(req, res, next) {
   });
 
   next();
-})
-
-console.log("MONGODB_URL", process.env.MONGODB_URL);
-// , {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// useCreateIndex: true,
-// useFindAndModify: false,
-// autoIndex: true,
-// });
+});
 
 connection.on("error", (error) => {
   console.log(`MongoDB database connection error: ${error}`);
@@ -37,16 +31,27 @@ connection.once("open", async function () {
   console.log("MongoDB database connection opened successfully.");
 });
 
+const schema = new Schema({
+  name: String,
+  age: Number,
+  email: String
+});
+
+const person = model('Person', schema);
+
 app.get("/", (req, res) => {
   res
     .status(200)
     .send("My test express app on aws lambda. Lets see if it works");
 });
 
-app.get("/info", (req, res) => {
+app.get("/info", async (req, res) => {
+  const someone = await new person.create({name: "Gregory", age: 76, email: "gregory@beans.com"});
+
   res.status(200).json({
     info: "You want an info, this is it",
-    isDBConnnected: connection.readyState
+    isDBConnnected: connection.readyState,
+    ...someone
   });
 });
 
