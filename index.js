@@ -46,7 +46,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/info", async (req, res) => {
-  const someone = await new person.create({name: "Gregory", age: 76, email: "gregory@beans.com"});
+  const someone = await person.create({name: "Gregory", age: 76, email: "gregory@beans.com"});
 
   res.status(200).json({
     info: "You want an info, this is it",
